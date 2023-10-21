@@ -42,7 +42,7 @@ search.mega_search(initial_N=1, upper_bound=30000, row_bound=24)
 
 The paper claims that when $p < 11$, $q < p^3$, there are no clashes when $N = p^2q^2$.
 
-We search through all $N=p^2q^2$ with $p < 11}$, $p < q$, $q < 7000$ in `primes.txt`. As 7000 is much bigger than $7^3$, this search is more than sufficient to prove our claim. It can be replicated as
+We search through all $N=p^2q^2$ with $p < 11$, $p < q$, $q < 7000$ in `primes.txt`. As 7000 is much bigger than $7^3$, this search is more than sufficient to prove our claim. It can be replicated as
 
 ```
 import search                                                           
