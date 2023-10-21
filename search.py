@@ -107,9 +107,10 @@ def create_dvects(somat):
     result_dict[tuple(A)] = dvect
   return result_dict
 
-test_clash_mat = SoMat([[1, 0, 3], [4, 1, 1], [5, 3, 0]], [2,1,2])
-
 def search_clash(somat, verbose=False):
+  """
+  Given a matrix, see if any pair of subsets of columns have sum equal (as sets)
+  """
   cols = len(somat.mat[0])
   dvects = create_dvects(somat)
   keys = [tuple(k) for k in powerset(range(1, cols))]
@@ -164,6 +165,12 @@ def factorization_tuple(n):
   return sorted(list(factors.items()), key = lambda x: x[0])
 
 def mega_search(initial_N=1, upper_bound=2000, row_bound=24):
+  """
+  Searching N from [initial_N] to [upper_bound], skipping any N where the number of rows
+  is too large.
+
+  In particular, for N=p^2q^2, p < 11, we only need to search up to 7^2*(7^3)^2
+  """
   for N in range(initial_N, upper_bound):
     ft = factorization_tuple(N)
     somat = SoMat.FromTuples(ft)
@@ -175,9 +182,21 @@ def mega_search(initial_N=1, upper_bound=2000, row_bound=24):
     search_clash_jit(somat)
     N += 1
 
-# nothing up to 336
+# For the Paper #
 
-#360 = 2^3 * 3^2 * 5 skipped; too much memory
-# skip 360
-# skip 420
-# skip 480
+def p2q2_search(p_bound, q_bound):
+  f = open("primes.txt", "r")
+  primes = [int(line) for line in f]
+  for i in range(len(primes)-1):
+    if primes[i] >= p_bound:
+      break
+    for j in range(i+1, len(primes)):
+      if primes[j] >= q_bound:
+        break
+      p = primes[i]
+      q = primes[j]
+      N = p*p*q*q
+      somat = SoMat.FromTuples([(p,2), (q,2)])
+      rows = len(somat.mat)
+      assert rows == 9
+      search_clash(somat)
